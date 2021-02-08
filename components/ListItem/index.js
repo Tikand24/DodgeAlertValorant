@@ -1,10 +1,16 @@
-import { breakpoints } from "../../styles/theme";
+import { useRouter } from 'next/router';
+import { breakpoints } from '../../styles/theme';
 
 export default function ListItem({ item }) {
+  const router = useRouter();
   return (
     <>
       <div>
-        <span>{item}</span>
+        <span
+          onClick={() => router.replace(`/agent/${encodeURIComponent(item)}`)}
+        >
+          {item}
+        </span>
         <button>*</button>
         <button>X</button>
       </div>
@@ -19,7 +25,16 @@ export default function ListItem({ item }) {
           }
         }
         button {
-            text-align:right;
+          text-align: right;
+        }
+        span {
+          text-decoration-line: underline;
+          cursor: pointer;
+        }
+        span:hover {
+          text-decoration-line: underline;
+          cursor: pointer;
+          color: #777;
         }
       `}</style>
     </>

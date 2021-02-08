@@ -1,6 +1,6 @@
-import { colors } from "../../styles/theme"
+import { colors } from '../../styles/theme';
 
-export default function Button({ children, disabled, onClick }) {
+export default function Button({ children, disabled, onClick, color }) {
   return (
     <>
       <button disabled={disabled} onClick={onClick}>
@@ -9,7 +9,7 @@ export default function Button({ children, disabled, onClick }) {
       <style jsx>{`
         button {
           align-items: center;
-          background: ${colors.black};
+          background: ${color ? color : colors.black};
           border-radius: 9999px;
           border: 0;
           color: #fff;
@@ -33,5 +33,5 @@ export default function Button({ children, disabled, onClick }) {
         }
       `}</style>
     </>
-  )
+  );
 }
