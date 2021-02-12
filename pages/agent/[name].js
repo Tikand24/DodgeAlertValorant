@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Button from '../../components/Button';
 import History from '../../components/History';
+import Loader from '../../components/Loader';
 import Select from '../../components/Select';
 import { addPlayer, getDataByAgent } from '../../firebase/client';
 
@@ -11,20 +12,27 @@ const Agent = () => {
   const [game, setGame] = useState('Valorant');
   const [observation, setObservation] = useState('');
   const [status, setStatus] = useState(false);
+  const [statusApi, setStatusApi] = useState(false);
   const [history, setHistory] = useState([]);
   const router = useRouter();
   const { name } = router.query;
   useEffect(() => {
-    getDataByAgent(name)
-      .get()
-      .then((response) => {
-        let history = [];
-        response.forEach((doc) => {
-          history.push(doc.data());
-        });
-        setHistory(history);
-      })
-      .catch((res) => console.error('err', res));
+    if (name) {
+      setStatusApi(true);
+      getDataByAgent(name)
+        .get()
+        .then((response) => {
+          let history = [];
+          response.forEach((doc) => {
+            history.push(doc.data());
+          });
+          setHistory(history);
+          setStatusApi(false);
+        })
+        .catch((res) => console.error('err', res));
+    }
+  }, [name]);
+  useEffect(() => {
     const recentSearch = localStorage.getItem('recentSearch');
     if (recentSearch) {
       let playersName = JSON.parse(recentSearch);
@@ -137,6 +145,7 @@ const Agent = () => {
       <div>
         <section>
           <History histories={history}></History>
+          {statusApi ? <Loader></Loader> : null}
         </section>
       </div>
       <style jsx>{`
@@ -164,9 +173,9 @@ const Agent = () => {
           outline: 0;
           resize: none;
           width: 100%;
-          margin-bottom:20px;
+          margin-bottom: 20px;
         }
-        p{
+        p {
           margin: 0 0 8px 0;
         }
       `}</style>
